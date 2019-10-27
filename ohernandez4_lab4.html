@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <!-- Modify Title between these comments (Choose correct class number and substitute your username) -->
+    <title>ITMD 465 / 565 Lab 4 - Ohernandez4</title>
+    <!-- Modify Title between these comments -->
+    <style type="text/css">
+        #resultsTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .active {
+            background-color: green;
+            color: white;
+        }
+
+        .inactive {
+            background-color: red;
+            color: white;
+        }
+    </style>    
+    </head>
+    <body>    
+        <h1 style = "text-align: center;">ITMD 465 / 565 - Lab 4</h1>
+        <h2 style = "text-align: center;">Omar Hernandez - Ohernandez4@hawk.iit.edu</h2>
+
+		<div style= "text-align: center;">
+        <button id="btn">Load Data</button>
+        <button style="margin-left: 15px;" id="resetBtn">Reset</button>
+        </div>
+
+        <h2 style = "text-align: center;">Employee List</h2>
+
+        <div id="results"></div>
+
+         <script type="text/javascript">
+             createTableAndHeader();
+
+             let resetBtn = document.getElementById('resetBtn');
+
+             resetBtn.onclick = resetLab;
+
+             document.getElementById("btn").disabled = false;
+             document.getElementById("resetBtn").disabled = true;
+
+             function createTableAndHeader() {
+                 var resultsTable = document.createElement("table");
+                 resultsTable.id = 'resultsTable';
+                 var header = document.createElement("thead");
+                 var headerRow = document.createElement('tr');
+
+                 var columns = ['ID', 'First Name', 'Last Name', 'Email', 'Title', 'Gender', 'Active'];
+
+                 for (var column of columns) {
+                     var columnEl = document.createElement('td');
+                     columnEl.innerText = column;
+                     headerRow.appendChild(columnEl);
+                 }
+
+                 header.appendChild(headerRow);
+                 resultsTable.appendChild(header);
+                 var tableBody = document.createElement('tbody');
+                 tableBody.id = 'resultsTableBody';
+                 resultsTable.appendChild(tableBody);
+                 document.getElementById('results').appendChild(resultsTable);
+                 resultsTable.style.textAlign = "center";
+                 resultsTable.style.margin = "auto";
+                 resultsTable.setAttribute("border", "2");
+                 document.getElementsByTagName('td')[3].style.width = '204px';
+                 document.getElementsByTagName('td')[4].style.width = '234px';
+             }
+
+             function resetLab() {
+                document.getElementById("resetBtn").disabled = true;
+                document.getElementById("btn").disabled = false;
+                console.log("Reset Lab");
+                var tableBody = document.getElementById('resultsTableBody');
+                tableBody.innerHTML = '';
+                // createTableAndHeader();
+             }
+
+
+         document.getElementById('btn').addEventListener('click', function(){
+         var myRequest = new XMLHttpRequest();
+
+         myRequest.onreadystatechange = function (){
+            if(myRequest.readyState === 4) {
+                if (myRequest.status === 200) {
+                    var resultsTable = document.getElementById('resultsTable');
+                    console.log(myRequest.responseText);
+                    console.log(JSON.parse(myRequest.responseText));
+                    document.getElementById("resetBtn").disabled = false;
+                    document.getElementById("btn").disabled = true;
+                    var a = JSON.parse(myRequest.responseText);
+
+                    var resultsTableBody = document.getElementById('resultsTableBody');
+
+                    for (var i = 0; i< a.length; i++){
+                        console.log(a[i]);
+                        var myCurrentRow = document.createElement("tr");
+                        var myCurrentCell = document.createElement("td");
+                        var currentText = document.createTextNode(a[i].id);
+                        myCurrentCell.appendChild(currentText);
+                        myCurrentRow.appendChild(myCurrentCell);
+                        var cellTwo = document.createElement("td");
+                        var textTwo = document.createTextNode(a[i].first_name);
+                        cellTwo.appendChild(textTwo);
+                        myCurrentRow.appendChild(cellTwo);
+                        var cellThree = document.createElement("td");
+                        var textThree = document.createTextNode(a[i].last_name);
+                        cellThree.appendChild(textThree);
+                        myCurrentRow.appendChild(cellThree);  
+                        var cellFour = document.createElement("td");
+                        var textFour = document.createTextNode(a[i].title);
+                        cellFour.appendChild(textFour);
+                        myCurrentRow.appendChild(cellFour);  
+                        var cellFive = document.createElement("td");
+                        var textFive = document.createTextNode(a[i].email);
+                        cellFive.appendChild(textFive);
+                        myCurrentRow.appendChild(cellFive);
+                        var cellSix = document.createElement("td");
+                        var textSix = document.createTextNode(a[i].gender);
+                        cellSix.appendChild(textSix);
+                        myCurrentRow.appendChild(cellSix);
+                        var cellSeven = document.createElement("td");
+                        var isActive = a[i].active;
+                        var textSeven = document.createTextNode(isActive);
+                        if (isActive) {
+                            cellSeven.classList.add('active');
+                        } else {
+                            cellSeven.classList.add('inactive');
+                        }
+                        cellSeven.appendChild(textSeven);
+                        myCurrentRow.appendChild(cellSeven);
+                        resultsTableBody.appendChild(myCurrentRow);
+
+                    }
+                    document.getElementById('results').appendChild(resultsTable);
+                    //resultsTableBody.appendChild(myCurrentRow);
+                    }
+                    //resultsTable.appendChild(resultsTableBody);
+                    //myBody.appendChild(resultsTable);
+                    }
+    }
+
+        myRequest.open('GET', 'http://libertyville.rice.iit.edu/scripts/4565_lab4.php', true);
+
+        myRequest.send();
+
+    });
+
+         </script>
+             
+     </body>
+</html>
